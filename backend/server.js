@@ -7,6 +7,12 @@ const { createProductRoutes } = require("./routes/products");
 const { createOrderRoutes } = require("./routes/orders");
 const { connectRabbitMQ } = require("./rabbitmq/rabbitmq");
 const { startConsumer } = require("./rabbitmq/consumer");
+const {
+  createQueueHandler,
+  deleteQueueHandler,
+  createExchangeHandler,
+  createBindingHandler
+} = require("./controllers/rabbitAdminController");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -43,10 +49,19 @@ async function start() {
     const orderController = createOrderController(pool);
 
     // Rutas (la seguridad se aplica dentro de products.js y orders.js)
+    
     app.use("/api/productos", createProductRoutes(productController));
     app.use("/api/pedidos", createOrderRoutes(orderController));
 
+    // Administración RabbitMQ
+
+    app.post("/api/rabbitmq/queues", createQueueHandler);
+    app.delete("/api/rabbitmq/queues/:name", deleteQueueHandler);
+    app.post("/api/rabbitmq/exchanges", createExchangeHandler);
+    app.post("/api/rabbitmq/bindings", createBindingHandler);
+    
     // Endpoint de salud
+    
     app.get("/api/health", (req, res) => {
       res.json({ status: "ok", message: "Backend de tienda de perritos en ejecución." });
     });
