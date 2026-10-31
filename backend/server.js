@@ -6,6 +6,7 @@ const { createOrderController } = require("./controllers/orderController");
 const { createProductRoutes } = require("./routes/products");
 const { createOrderRoutes } = require("./routes/orders");
 const { connectRabbitMQ } = require("./rabbitmq/rabbitmq");
+const { startConsumer } = require("./rabbitmq/consumer");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -37,6 +38,7 @@ async function start() {
     });
     console.log("Pool de conexiones MySQL inicializado.");
     await connectRabbitMQ();
+    await startConsumer();
     const productController = createProductController(pool);
     const orderController = createOrderController(pool);
 
