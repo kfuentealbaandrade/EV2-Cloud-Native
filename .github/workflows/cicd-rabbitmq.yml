@@ -1,0 +1,33 @@
+name: CI/CD Tienda Perritos - RabbitMQ
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-rabbitmq:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Desplegar RabbitMQ en EC2
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.EC2_HOST_BACKEND_DB }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          set -e
+
+          sudo docker stop rabbitmq || true
+          sudo docker rm rabbitmq || true
+
+          sudo docker pull rabbitmq:3-management
+
+          sudo docker network create tienda-net || true
+
+          sudo docker run -d \
+            --name rabbitmq \
+            --network tienda-net \
+            --restart unless-stopped \
+            -p 5672:5672 \
+            -p 15672:15672 \
+            rabbitmq:3-management
