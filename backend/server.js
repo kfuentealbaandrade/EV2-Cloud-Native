@@ -59,6 +59,10 @@ async function start() {
     app.delete("/api/rabbitmq/queues/:name", deleteQueueHandler);
     app.post("/api/rabbitmq/exchanges", createExchangeHandler);
     app.post("/api/rabbitmq/bindings", createBindingHandler);
+    app.get("/api/rabbitmq/test", 
+      (req, res) => {res.json({message:"RabbitMQ Admin API funcionando"});
+      }
+    );
     
     // Endpoint de salud
     
