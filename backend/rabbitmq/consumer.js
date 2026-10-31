@@ -13,22 +13,50 @@ async function startConsumer() {
 
   channel.consume(
     "pedidos_queue",
-    (message) => {
+(message) => {
 
-      if (!message) return;
+  if (!message) return;
 
-      const pedido =
-        JSON.parse(
-          message.content.toString()
-        );
+  try {
 
-      console.log(
-        "Pedido recibido:",
-        pedido
+    const pedido =
+      JSON.parse(
+        message.content.toString()
       );
 
-      channel.ack(message);
+    console.log(
+      "Pedido recibido:",
+      pedido
+    );
+
+    /*
+      Error controlado para pruebas DLQ
+    */
+    if (
+      pedido.producto ===
+      "FORZAR_ERROR"
+    ) {
+      throw new Error(
+        "Error de prueba"
+      );
     }
+
+    channel.ack(message);
+
+  } catch (error) {
+
+    console.error(
+      "Error procesando pedido:",
+      error.message
+    );
+
+    channel.nack(
+      message,
+      false,
+      false
+    );
+  }
+}   
   );
 
   console.log(
