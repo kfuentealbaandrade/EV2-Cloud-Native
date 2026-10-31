@@ -1,3 +1,4 @@
+const { publishOrder } = require("../rabbitmq/producer");
 function getClientId(auth) {
   return auth?.oid || auth?.sub;
 }
@@ -41,9 +42,26 @@ function createOrderController(pool) {
         "INSERT INTO pedidos (cliente_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)",
         [clientId, product.id, quantity, product.precio]
       );
-      await connection.query("UPDATE productos SET stock = stock - ? WHERE id = ?", [quantity, product.id]);
+      
+     /* await connection.query("UPDATE productos SET stock = stock - ? WHERE id = ?", [quantity, product.id]);
+      await connection.commit();*/
+      
+      await connection.query("UPDATE productos SET stock = stock - ? WHERE id = ?",
+        [quantity, product.id]
+      );
+      
       await connection.commit();
-
+      
+      await publishOrder({
+        pedidoId: result.insertId,
+        clienteId: clientId,
+        productoId: product.id,
+        producto: product.nombre,
+        cantidad: quantity,
+        precioUnitario: product.precio,
+        fecha: new Date()
+      });
+      
       res.status(201).json({
         id: result.insertId,
         productoId: product.id,
