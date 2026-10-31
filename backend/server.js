@@ -36,7 +36,7 @@ async function start() {
       queueLimit: 0,
     });
     console.log("Pool de conexiones MySQL inicializado.");
-
+    await connectRabbitMQ();
     const productController = createProductController(pool);
     const orderController = createOrderController(pool);
 
