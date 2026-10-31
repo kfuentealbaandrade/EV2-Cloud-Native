@@ -5,6 +5,7 @@ const { createProductController } = require("./controllers/productController");
 const { createOrderController } = require("./controllers/orderController");
 const { createProductRoutes } = require("./routes/products");
 const { createOrderRoutes } = require("./routes/orders");
+const { connectRabbitMQ } = require("./rabbitmq/rabbitmq");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
