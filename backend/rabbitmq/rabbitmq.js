@@ -8,6 +8,9 @@ let channel;
 const EXCHANGE = "pedidos_exchange";
 const QUEUE = "pedidos_queue";
 const ROUTING_KEY = "pedido.creado";
+const DLX = "pedidos_dlx";
+const DLQ = "pedidos_dlq";
+const DLX_ROUTING_KEY = "pedido.error";
 
 async function connectRabbitMQ() {
   try {
@@ -24,18 +27,40 @@ async function connectRabbitMQ() {
         durable: true
       }
     );
-
-    await channel.assertQueue(
-      QUEUE,
+    await channel.assertExchange(
+      DLX,
+      "direct",
       {
         durable: true
       }
     );
 
+    await channel.assertQueue(
+      QUEUE,
+      {
+        durable: true,
+        deadLetterExchange: DLX,
+        deadLetterRoutingKey: DLX_ROUTING_KEY
+      }
+    );
+
+    await channel.assertQueue(
+      DLQ,
+      {
+        durable: true
+      }
+    );
+    
     await channel.bindQueue(
       QUEUE,
       EXCHANGE,
       ROUTING_KEY
+    );
+
+    await channel.bindQueue(
+      DLQ,
+      DLX,
+      DLX_ROUTING_KEY
     );
 
     console.log("RabbitMQ conectado");
@@ -57,3 +82,13 @@ module.exports = {
   EXCHANGE,
   ROUTING_KEY
 };
+
+/* module.exports = {
+  connectRabbitMQ,
+  getChannel,
+  EXCHANGE,
+  ROUTING_KEY,
+  DLX,
+  DLQ,
+  DLX_ROUTING_KEY
+}; */
