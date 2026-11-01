@@ -10,8 +10,22 @@ Proyecto fullstack desplegado en **AWS** y **Azure Entra ID**, que integra auten
 - **Infraestructura:** AWS EC2, API Gateway, Elastic IP
 - **Autenticación:** Microsoft Entra ID (Azure)
 - **Base de datos:** MySQL (Docker o instancia EC2)
+- **Mensajería:** RabbitMQ (Productor, Consumidor, ACK, NACK, DLQ)
 
 ---
+
+## Arquitectura de Mensajería
+RabbitMQ se utiliza como capa de comunicación asíncrona para el procesamiento de pedidos.
+
+Componentes implementados:
+
+• pedidos_exchange (Direct Exchange)
+• pedidos_queue (cola principal)
+• pedidos_dlx (Dead Letter Exchange)
+• pedidos_dlq (Dead Letter Queue)
+• Productor RabbitMQ
+• Consumidor RabbitMQ
+• ACK y NACK
 
 ## 📦 Clonar el repositorio
 ```bash
