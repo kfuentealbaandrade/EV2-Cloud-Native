@@ -76,14 +76,7 @@ function getChannel() {
   return channel;
 }
 
-module.exports = {
-  connectRabbitMQ,
-  getChannel,
-  EXCHANGE,
-  ROUTING_KEY
-};
-
-/* module.exports = {
+ module.exports = {
   connectRabbitMQ,
   getChannel,
   EXCHANGE,
@@ -91,4 +84,4 @@ module.exports = {
   DLX,
   DLQ,
   DLX_ROUTING_KEY
-}; */
+}; 
