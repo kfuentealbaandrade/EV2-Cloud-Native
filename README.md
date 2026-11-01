@@ -32,10 +32,10 @@ La aplicación permite administrar recursos RabbitMQ mediante endpoints REST.
 
 Endpoints disponibles:
 
-POST   /api/rabbitmq/queues
-DELETE /api/rabbitmq/queues/:name
-POST   /api/rabbitmq/exchanges
-POST   /api/rabbitmq/bindings
+- POST   /api/rabbitmq/queues
+- DELETE /api/rabbitmq/queues/:name
+- POST   /api/rabbitmq/exchanges
+- POST   /api/rabbitmq/bindings
 
 ## 📦 Clonar el repositorio
 ```bash
