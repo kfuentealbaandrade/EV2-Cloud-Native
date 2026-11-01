@@ -5,7 +5,7 @@ Proyecto fullstack desplegado en **AWS** y **Azure Entra ID**, que integra auten
 ---
 
 ## 🚀 Tecnologías principales
-- **Frontend:** React / Nginx / Docker
+- **Frontend:** HTML5, JavaScript, MSAL.js, Nginx y Docker
 - **Backend:** Node.js / Express / MySQL
 - **Infraestructura:** AWS EC2, API Gateway, Elastic IP
 - **Autenticación:** Microsoft Entra ID (Azure)
@@ -19,13 +19,23 @@ RabbitMQ se utiliza como capa de comunicación asíncrona para el procesamiento 
 
 Componentes implementados:
 
-- • pedidos_exchange (Direct Exchange)
-- • pedidos_queue (cola principal)
-- • pedidos_dlx (Dead Letter Exchange)
-- • pedidos_dlq (Dead Letter Queue)
-- • Productor RabbitMQ
-- • Consumidor RabbitMQ
-- • ACK y NACK
+- pedidos_exchange (Direct Exchange)
+- pedidos_queue (cola principal)
+- pedidos_dlx (Dead Letter Exchange)
+- pedidos_dlq (Dead Letter Queue)
+- Productor RabbitMQ
+- Consumidor RabbitMQ
+- ACK y NACK
+
+##Administración RabbitMQ vía API
+La aplicación permite administrar recursos RabbitMQ mediante endpoints REST.
+
+Endpoints disponibles:
+
+POST   /api/rabbitmq/queues
+DELETE /api/rabbitmq/queues/:name
+POST   /api/rabbitmq/exchanges
+POST   /api/rabbitmq/bindings
 
 ## 📦 Clonar el repositorio
 ```bash
@@ -94,7 +104,7 @@ javascript
 export const msalConfig = {
   auth: {
     clientId: "<CLIENT_ID_SPA>",
-    authority: "https://<TENANT>.b2clogin.com/<TENANT>.onmicrosoft.com/<POLICY>",
+    authority: "https://<TENANT>.ciamlogin.com/<TENANT>.onmicrosoft.com/<POLICY>",
     redirectUri: "https://<api-id>.execute-api.<region>.amazonaws.com/prod"
   }
 };
