@@ -27,7 +27,7 @@ Componentes implementados:
 - Consumidor RabbitMQ
 - ACK y NACK
 
-##Administración RabbitMQ vía API
+## Administración RabbitMQ vía API
 La aplicación permite administrar recursos RabbitMQ mediante endpoints REST.
 
 Endpoints disponibles:
