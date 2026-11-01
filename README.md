@@ -19,13 +19,13 @@ RabbitMQ se utiliza como capa de comunicación asíncrona para el procesamiento 
 
 Componentes implementados:
 
-• pedidos_exchange (Direct Exchange)
-• pedidos_queue (cola principal)
-• pedidos_dlx (Dead Letter Exchange)
-• pedidos_dlq (Dead Letter Queue)
-• Productor RabbitMQ
-• Consumidor RabbitMQ
-• ACK y NACK
+- • pedidos_exchange (Direct Exchange)
+- • pedidos_queue (cola principal)
+- • pedidos_dlx (Dead Letter Exchange)
+- • pedidos_dlq (Dead Letter Queue)
+- • Productor RabbitMQ
+- • Consumidor RabbitMQ
+- • ACK y NACK
 
 ## 📦 Clonar el repositorio
 ```bash
