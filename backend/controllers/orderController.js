@@ -43,13 +43,20 @@ function createOrderController(pool) {
         [clientId, product.id, quantity, product.precio]
       );
       
-     /* await connection.query("UPDATE productos SET stock = stock - ? WHERE id = ?", [quantity, product.id]);
-      await connection.commit();*/
+
       
       await connection.query("UPDATE productos SET stock = stock - ? WHERE id = ?",
         [quantity, product.id]
       );
       
+      const { sendMessage } = require("../kafka/producer");
+      const TOPICS = require("../kafka/topics");
+      const createPedidoEvent = require("../kafka/dto/pedidoEvent"); 
+
+
+           /* await connection.query("UPDATE productos SET stock = stock - ? WHERE id = ?", [quantity, product.id]);
+      await connection.commit();*/
+
       await connection.commit();
       
       await publishOrder({
@@ -61,6 +68,20 @@ function createOrderController(pool) {
         precioUnitario: product.precio,
         fecha: new Date()
       });
+
+      await sendMessage(
+        TOPICS.PEDIDO_CREADO,
+        `pedido-${result.insertId}`,
+        createPedidoEvent({
+          pedidoId: result.insertId,
+          clienteId: clientId,
+          productoId: product.id,
+          producto: product.nombre,
+          cantidad: quantity,
+          precioUnitario: product.precio,
+          fecha: new Date().toISOString()
+        })
+      );
       
       res.status(201).json({
         id: result.insertId,

@@ -1,9 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const { connectProducer } = require("./kafka/producer");
+const { startConsumers } = require("./kafka/consumer");
 const { createProductController } = require("./controllers/productController");
 const { createOrderController } = require("./controllers/orderController");
 const { createProductRoutes } = require("./routes/products");
+const { createKafkaRoutes } = require("./routes/kafka");
 const { createOrderRoutes } = require("./routes/orders");
 const { connectRabbitMQ } = require("./rabbitmq/rabbitmq");
 const { startConsumer } = require("./rabbitmq/consumer");
@@ -25,10 +28,36 @@ const {
   MYSQL_PORT,
 } = process.env;
 
+app.use(
+  "/api/kafka",
+  createKafkaRoutes()
+);
 app.use(cors());
 app.use(express.json());
 
 let pool;
+
+async function waitForRabbitMQ(maxRetries = 20) {
+  for (let i = 1; i <= maxRetries; i++) {
+    try {
+      await connectRabbitMQ();
+      console.log("RabbitMQ conectado");
+      return;
+    } catch (error) {
+      console.log(
+        `Intento ${i}/${maxRetries} - RabbitMQ aún no disponible`
+      );
+
+      await new Promise(resolve =>
+        setTimeout(resolve, 3000)
+      );
+    }
+  }
+
+  throw new Error(
+    "RabbitMQ no disponible después de varios intentos"
+  );
+}
 
 async function start() {
   try {
@@ -43,7 +72,9 @@ async function start() {
       queueLimit: 0,
     });
     console.log("Pool de conexiones MySQL inicializado.");
-    await connectRabbitMQ();
+    await waitForRabbitMQ();
+    await connectProducer();
+    await startConsumers();
     await startConsumer();
     const productController = createProductController(pool);
     const orderController = createOrderController(pool);

@@ -64,11 +64,13 @@ async function connectRabbitMQ() {
     );
 
     console.log("RabbitMQ conectado");
+
   } catch (error) {
     console.error(
       "Error conectando RabbitMQ:",
       error
     );
+    throw error;
   }
 }
 

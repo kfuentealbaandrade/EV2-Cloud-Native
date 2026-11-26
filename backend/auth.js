@@ -24,22 +24,29 @@ const identityProviders = [
   {
     audience: acceptedAudiences(process.env.AAD_AUDIENCE),
     issuer: `https://login.microsoftonline.com/${internalTenantId}/v2.0`,
-    client: createJwksClient(`https://login.microsoftonline.com/${internalTenantId}/discovery/v2.0/keys`),
+    client: createJwksClient(
+      `https://login.microsoftonline.com/${internalTenantId}/discovery/v2.0/keys`
+    ),
     type: "internal"
   },
   {
     audience: acceptedAudiences(process.env.AAD_AUDIENCE),
     issuer: `https://sts.windows.net/${internalTenantId}/`,
-    client: createJwksClient(`https://login.microsoftonline.com/${internalTenantId}/discovery/v2.0/keys`),
+    client: createJwksClient(
+      `https://login.microsoftonline.com/${internalTenantId}/discovery/v2.0/keys`
+    ),
     type: "internal"
   },
   {
     audience: acceptedAudiences(process.env.AAD_EXTERNAL_AUDIENCE),
     issuer: `https://${externalTenantId}.ciamlogin.com/${externalTenantId}/v2.0`,
-    client: createJwksClient(`https://${externalAuthorityHost}/${externalTenantId}/discovery/v2.0/keys`),
+    client: createJwksClient(
+      `https://${externalAuthorityHost}/${externalTenantId}/discovery/v2.0/keys`
+    ),
     type: "external"
-  },
+  }
 ];
+
 
 function getSigningKey(client, header, callback) {
   if (!header.kid) {
@@ -64,7 +71,23 @@ function checkJwt(req, res, next) {
   }
 
   const decodedToken = jwt.decode(token);
+
+  console.log("ISSUER RECIBIDO:");
+  console.log(decodedToken?.iss);
+
+  console.log("AUDIENCE RECIBIDA:");
+  console.log(decodedToken?.aud);
+
+  console.log("ROLES:");
+  console.log(decodedToken?.roles);
+
+  console.log("SCOPE:");
+  console.log(decodedToken?.scp);
+
+  
+
   const identityProvider = identityProviders.find((provider) => provider.issuer === decodedToken?.iss);
+  console.log("IDENTITY PROVIDER ENCONTRADO:", identityProvider);
 
   if (!identityProvider) {
     return res.status(401).json({ message: "El emisor del token no está autorizado." });

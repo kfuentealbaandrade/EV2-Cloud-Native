@@ -4,10 +4,14 @@ const authConfig = {
       auth: {
         clientId: "9c61f329-5d50-41a9-be4d-557d53935f70",
         authority: "https://login.microsoftonline.com/ea6b8b9d-33ce-49ad-95e6-551bce054fe7",
-        redirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/",
-        //redirectUri: window.location.origin,
-        postLogoutRedirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/index.html",
-        // window.location.origin,
+
+        //para configurar URLs en AWS:
+        //redirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/",
+        //postLogoutRedirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/index.html",
+        
+        //para configurar URLs en localhost
+        redirectUri: window.location.origin,
+        postLogoutRedirectUri: window.location.origin,
       },
       cache: {
         cacheLocation: "localStorage",
@@ -22,13 +26,18 @@ const authConfig = {
     msal: {
       auth: {
         clientId: "a64dfa50-28aa-4285-b102-9d60c5d30f45",
-        authority: "https://karen004v.ciamlogin.com", ///b5253255-4e61-4557-bf3f-661f8dc60447/Karen004V",
+        authority: "https://karen004v.ciamlogin.com/b5253255-4e61-4557-bf3f-661f8dc60447", ///"https://karen004v.ciamlogin.com", 
         knownAuthorities: ["karen004v.ciamlogin.com"],
-        redirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/",
-      //  redirectUri: window.location.origin,
+
+        //Para AWS
+        //redirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/",  
+        //postLogoutRedirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/",
+
+        //Para local
+        redirectUri: window.location.origin,
+        postLogoutRedirectUri: window.location.origin,
+      
         
-        postLogoutRedirectUri: "https://uzhnb8lls6.execute-api.us-east-1.amazonaws.com/prod/",
-      // window.location.origin,
       },
       cache: {
         cacheLocation: "localStorage",

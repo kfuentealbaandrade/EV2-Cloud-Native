@@ -45,6 +45,9 @@ function createProductController(pool) {
 
   async function updateProduct(req, res) {
     const { nombre, descripcion, precio, stock } = req.body;
+    const { sendMessage } = require("../kafka/producer");
+    const TOPICS = require("../kafka/topics");
+    const createStockEvent = require("../kafka/dto/stockEvent");
     if (!nombre || precio == null || stock == null) {
       res.status(400).json({ message: "Nombre, precio y stock son obligatorios." });
       return;
@@ -60,6 +63,11 @@ function createProductController(pool) {
         return;
       }
       const [rows] = await pool.query("SELECT id, nombre, descripcion, precio, stock FROM productos WHERE id = ?", [req.params.id]);
+      await sendMessage(
+      TOPICS.PRODUCTO_STOCK,
+      `producto-${rows[0].id}`,
+      createStockEvent(rows[0])
+      );
       res.json(rows[0]);
     } catch (error) {
       console.error(error);
